@@ -144,29 +144,28 @@
 <script>
 const categories = ["Home", "Portraits", "Landscape", "Street", "Events", "Contact"];
 
-// AUTO-GENERATED PHOTO LISTS (OPTION A)
-// Just drop numbered images: 1.jpg, 2.jpg, 3.jpg ...
-// Change only the COUNT when you add new photos
+// Define your elements
+const menu = document.getElementById("menu");
+const home = document.getElementById("home");
+const gallery = document.getElementById("gallery");
+const contact = document.getElementById("contact"); // Added this line
+const viewer = document.getElementById("viewer");
+const viewerImg = document.getElementById("viewerImg");
+
+// Fix: Matches names exactly to the categories array
+const photos = {
+  Home: generatePhotos("Home", 3),
+  Portraits: generatePhotos("Portraits", 2), // Fixed spelling
+  Landscape: generatePhotos("Landscape", 2),
+  Street: generatePhotos("Street", 2),
+  Events: generatePhotos("Events", 2)
+};
 
 function generatePhotos(folder, count) {
   return Array.from({ length: count }, (_, i) =>
     `photos/${folder}/${i + 1}.jpg`
   );
 }
-
-const photos = {
-  Home: generatePhotos("Home", 3),
-  Portraits: generatePhotos("Portratis", 2),
-  Landscape: generatePhotos("Landscape", 2),
-  Street: generatePhotos("Street", 2),
-  Events: generatePhotos("Events", 2)
-};
-
-const menu = document.getElementById("menu");
-const home = document.getElementById("home");
-const gallery = document.getElementById("gallery");
-const viewer = document.getElementById("viewer");
-const viewerImg = document.getElementById("viewerImg");
 
 let currentPage = "Home";
 let currentIndex = 0;
@@ -181,14 +180,16 @@ categories.forEach(c => {
 
 function loadPage(page) {
   currentPage = page;
+  
+  // Update active button styling
   document.querySelectorAll("nav button").forEach(b => {
     b.classList.toggle("active", b.textContent === page);
   });
 
+  // Reset visibility
   home.style.display = "none";
   gallery.style.display = "none";
   contact.style.display = "none";
-
   home.innerHTML = "";
   gallery.innerHTML = "";
 
@@ -202,47 +203,18 @@ function loadPage(page) {
     const prev = document.createElement("button");
     prev.textContent = "◀";
     prev.className = "slider-btn prev";
-    prev.onclick = () => slide(-1, img, photos.Home);
+    prev.onclick = (e) => { e.stopPropagation(); slide(-1, img, photos.Home); };
 
     const next = document.createElement("button");
     next.textContent = "▶";
     next.className = "slider-btn next";
-    next.onclick = () => slide(1, img, photos.Home);
+    next.onclick = (e) => { e.stopPropagation(); slide(1, img, photos.Home); };
 
     home.append(img, prev, next);
   } else if (page === "Contact") {
     contact.style.display = "block";
   } else {
     gallery.style.display = "grid";
-    photos[page].forEach((src, i) => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.onclick = () => openViewer(i);
-      gallery.appendChild(img);
-    });
-  }
-});
-
-  home.innerHTML = "";
-  gallery.innerHTML = "";
-
-  if (page === "Home") {
-    currentIndex = 0;
-    const img = document.createElement("img");
-    img.src = photos.Home[currentIndex];
-
-    const prev = document.createElement("button");
-    prev.textContent = "◀";
-    prev.className = "slider-btn prev";
-    prev.onclick = () => slide(-1, img, photos.Home);
-
-    const next = document.createElement("button");
-    next.textContent = "▶";
-    next.className = "slider-btn next";
-    next.onclick = () => slide(1, img, photos.Home);
-
-    home.append(img, prev, next);
-  } else {
     photos[page].forEach((src, i) => {
       const img = document.createElement("img");
       img.src = src;
@@ -267,14 +239,13 @@ viewer.onclick = () => viewer.style.display = "none";
 
 window.addEventListener("keydown", e => {
   if (viewer.style.display !== "flex") return;
-  if (e.key === "ArrowRight") currentIndex++;
-  if (e.key === "ArrowLeft") currentIndex--;
-
   const list = photos[currentPage];
-  currentIndex = (currentIndex + list.length) % list.length;
+  if (e.key === "ArrowRight") currentIndex = (currentIndex + 1) % list.length;
+  if (e.key === "ArrowLeft") currentIndex = (currentIndex - 1 + list.length) % list.length;
   viewerImg.src = list[currentIndex];
 });
 
+// Start the page
 loadPage("Home");
 </script>
 
