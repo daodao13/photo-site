@@ -99,25 +99,44 @@
 
     /* Contact */
     #contact {
-      max-width: 500px;
-      margin: 20px;
-      padding: 16px;
-    }
+  /* This sets it exactly 5cm from the top and centers it horizontally */
+  margin: 5cm auto 100px auto; 
+  
+  /* Increased width for 4K - 500px is a bit small for ultra-high res */
+  max-width: 700px; 
+  padding: 20px;
+  
+  /* Ensures the 'Contact' heading and form stay centered */
+  text-align: center; 
+}
 
     #contact input, #contact textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
+  width: 100%;
+  padding: 15px; /* Larger padding for 4K */
+  margin-bottom: 15px;
+  font-size: 18px; /* Bigger text for high-res */
+  background: #111; /* Darker background to match the theme */
+  color: white;
+  border: 1px solid #444;
+  box-sizing: border-box; /* Crucial for width: 100% to work correctly */
+}
 
-    #contact button {
-      width: 100%;
-      padding: 10px;
-      background: white;
-      color: black;
-      border: none;
-      cursor: pointer;
-    }
+   #contact button {
+  width: 100%;
+  padding: 15px;
+  background: white;
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#contact h2 {
+  font-size: 40px; /* Larger heading for 4K */
+  margin-bottom: 30px;
+}
   </style>
 </head>
 <body>
