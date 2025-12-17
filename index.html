@@ -110,7 +110,7 @@
     /* Contact */
     #contact {
       max-width: 500px;
-      margin: -100px auto 40px auto;
+      margin: 100px auto 40px auto;
       padding: 16px;
     }
 
@@ -199,7 +199,7 @@ function generatePhotos(folder, count) {
 
 const photos = {
   Home: generatePhotos("Home", 6),
-  Portraits: generatePhotos("Portratis", 5),
+  Portraits: generatePhotos("Portraits", 5),
   Landscape: generatePhotos("Landscape", 9),
   Street: generatePhotos("Street", 8),
   Events: generatePhotos("Events", 3)
@@ -208,6 +208,7 @@ const photos = {
 const menu = document.getElementById("menu");
 const home = document.getElementById("home");
 const gallery = document.getElementById("gallery");
+const contact = document.getElementById("contact");
 const viewer = document.getElementById("viewer");
 const viewerImg = document.getElementById("viewerImg");
 
@@ -257,35 +258,6 @@ function loadPage(page) {
     contact.style.display = "block";
   } else {
     gallery.style.display = "grid";
-    photos[page].forEach((src, i) => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.onclick = () => openViewer(i);
-      gallery.appendChild(img);
-    });
-  }
-});
-
-  home.innerHTML = "";
-  gallery.innerHTML = "";
-
-  if (page === "Home") {
-    currentIndex = 0;
-    const img = document.createElement("img");
-    img.src = photos.Home[currentIndex];
-
-    const prev = document.createElement("button");
-    prev.textContent = "◀";
-    prev.className = "slider-btn prev";
-    prev.onclick = () => slide(-1, img, photos.Home);
-
-    const next = document.createElement("button");
-    next.textContent = "▶";
-    next.className = "slider-btn next";
-    next.onclick = () => slide(1, img, photos.Home);
-
-    home.append(img, prev, next);
-  } else {
     photos[page].forEach((src, i) => {
       const img = document.createElement("img");
       img.src = src;
