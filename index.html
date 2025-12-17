@@ -60,25 +60,35 @@
     .prev { left: 10px; }
     .next { right: 10px; }
 
-    /* Gallery */
+    /* Gallery – Professional Grid Layout */
     .gallery {
-      column-count: 3;
-      column-gap: 16px;
-      padding: 16px;
-    }
-
-    @media (max-width: 900px) {
-      .gallery { column-count: 2; }
-    }
-
-    @media (max-width: 600px) {
-      .gallery { column-count: 1; }
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      padding: 40px 5vw;
+      align-items: start;
     }
 
     .gallery img {
       width: 100%;
-      margin-bottom: 16px;
+      height: auto;
+      display: block;
       cursor: pointer;
+      border-radius: 2px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+      opacity: 0.96;
+    }
+
+    @media (max-width: 600px) {
+      .gallery {
+        padding: 24px 16px;
+        gap: 16px;
+      }
     }
 
     /* Viewer */
@@ -99,44 +109,51 @@
 
     /* Contact */
     #contact {
-  /* This sets it exactly 5cm from the top and centers it horizontally */
-  margin: 5cm auto 100px auto; 
-  
-  /* Increased width for 4K - 500px is a bit small for ultra-high res */
-  max-width: 700px; 
-  padding: 20px;
-  
-  /* Ensures the 'Contact' heading and form stay centered */
-  text-align: center; 
-}
+      max-width: 500px;
+      margin: -100px auto 40px auto;
+      padding: 16px;
+    }
 
     #contact input, #contact textarea {
-  width: 100%;
-  padding: 15px; /* Larger padding for 4K */
-  margin-bottom: 15px;
-  font-size: 18px; /* Bigger text for high-res */
-  background: #111; /* Darker background to match the theme */
-  color: white;
-  border: 1px solid #444;
-  box-sizing: border-box; /* Crucial for width: 100% to work correctly */
-}
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
 
-   #contact button {
-  width: 100%;
-  padding: 15px;
-  background: white;
-  color: black;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
+    #contact button {
+      width: 100%;
+      padding: 10px;
+      background: white;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+  
+    /* Footer */
+    footer {
+      margin-top: 80px;
+      padding: 30px 20px;
+      border-top: 1px solid #222;
+      color: #aaa;
+      font-size: 14px;
+    }
 
-#contact h2 {
-  font-size: 40px; /* Larger heading for 4K */
-  margin-bottom: 30px;
-}
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-content a {
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    .footer-content a:hover {
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -160,31 +177,39 @@
   </form>
 </div>
 
+<footer>
+  <div class="footer-content">
+    <span>© <span id="year"></span> Your Name</span>
+    <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</footer>
+
 <script>
 const categories = ["Home", "Portraits", "Landscape", "Street", "Events", "Contact"];
 
-// Define your elements
-const menu = document.getElementById("menu");
-const home = document.getElementById("home");
-const gallery = document.getElementById("gallery");
-const contact = document.getElementById("contact"); // Added this line
-const viewer = document.getElementById("viewer");
-const viewerImg = document.getElementById("viewerImg");
-
-// Fix: Matches names exactly to the categories array
-const photos = {
-  Home: generatePhotos("Home", 6),
-  Portraits: generatePhotos("Portraits", 5), // Fixed spelling
-  Landscape: generatePhotos("Landscape", 12),
-  Street: generatePhotos("Street", 8),
-  Events: generatePhotos("Events", 6)
-};
+// AUTO-GENERATED PHOTO LISTS (OPTION A)
+// Just drop numbered images: 1.jpg, 2.jpg, 3.jpg ...
+// Change only the COUNT when you add new photos
 
 function generatePhotos(folder, count) {
   return Array.from({ length: count }, (_, i) =>
     `photos/${folder}/${i + 1}.jpg`
   );
 }
+
+const photos = {
+  Home: generatePhotos("Home", 5),
+  Portraits: generatePhotos("Portratis", 20),
+  Landscape: generatePhotos("Landscape", 15),
+  Street: generatePhotos("Street", 12),
+  Events: generatePhotos("Events", 18)
+};
+
+const menu = document.getElementById("menu");
+const home = document.getElementById("home");
+const gallery = document.getElementById("gallery");
+const viewer = document.getElementById("viewer");
+const viewerImg = document.getElementById("viewerImg");
 
 let currentPage = "Home";
 let currentIndex = 0;
@@ -199,16 +224,14 @@ categories.forEach(c => {
 
 function loadPage(page) {
   currentPage = page;
-  
-  // Update active button styling
   document.querySelectorAll("nav button").forEach(b => {
     b.classList.toggle("active", b.textContent === page);
   });
 
-  // Reset visibility
   home.style.display = "none";
   gallery.style.display = "none";
   contact.style.display = "none";
+
   home.innerHTML = "";
   gallery.innerHTML = "";
 
@@ -222,18 +245,47 @@ function loadPage(page) {
     const prev = document.createElement("button");
     prev.textContent = "◀";
     prev.className = "slider-btn prev";
-    prev.onclick = (e) => { e.stopPropagation(); slide(-1, img, photos.Home); };
+    prev.onclick = () => slide(-1, img, photos.Home);
 
     const next = document.createElement("button");
     next.textContent = "▶";
     next.className = "slider-btn next";
-    next.onclick = (e) => { e.stopPropagation(); slide(1, img, photos.Home); };
+    next.onclick = () => slide(1, img, photos.Home);
 
     home.append(img, prev, next);
   } else if (page === "Contact") {
     contact.style.display = "block";
   } else {
     gallery.style.display = "grid";
+    photos[page].forEach((src, i) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.onclick = () => openViewer(i);
+      gallery.appendChild(img);
+    });
+  }
+});
+
+  home.innerHTML = "";
+  gallery.innerHTML = "";
+
+  if (page === "Home") {
+    currentIndex = 0;
+    const img = document.createElement("img");
+    img.src = photos.Home[currentIndex];
+
+    const prev = document.createElement("button");
+    prev.textContent = "◀";
+    prev.className = "slider-btn prev";
+    prev.onclick = () => slide(-1, img, photos.Home);
+
+    const next = document.createElement("button");
+    next.textContent = "▶";
+    next.className = "slider-btn next";
+    next.onclick = () => slide(1, img, photos.Home);
+
+    home.append(img, prev, next);
+  } else {
     photos[page].forEach((src, i) => {
       const img = document.createElement("img");
       img.src = src;
@@ -258,13 +310,15 @@ viewer.onclick = () => viewer.style.display = "none";
 
 window.addEventListener("keydown", e => {
   if (viewer.style.display !== "flex") return;
+  if (e.key === "ArrowRight") currentIndex++;
+  if (e.key === "ArrowLeft") currentIndex--;
+
   const list = photos[currentPage];
-  if (e.key === "ArrowRight") currentIndex = (currentIndex + 1) % list.length;
-  if (e.key === "ArrowLeft") currentIndex = (currentIndex - 1 + list.length) % list.length;
+  currentIndex = (currentIndex + list.length) % list.length;
   viewerImg.src = list[currentIndex];
 });
 
-// Start the page
+document.getElementById("year").textContent = new Date().getFullYear();
 loadPage("Home");
 </script>
 
