@@ -41,7 +41,8 @@
     #home img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      cursor: pointer;
     }
 
     .slider-btn {
@@ -141,30 +142,24 @@
 </div>
 
 <script>
-const categories = ["Home", "Portraits", "Landscape", "Street", "Events"];
+const categories = ["Home", "Portraits", "Landscape", "Street", "Events", "Contact"];
+
+// AUTO-GENERATED PHOTO LISTS (OPTION A)
+// Just drop numbered images: 1.jpg, 2.jpg, 3.jpg ...
+// Change only the COUNT when you add new photos
+
+function generatePhotos(folder, count) {
+  return Array.from({ length: count }, (_, i) =>
+    `photos/${folder}/${i + 1}.jpg`
+  );
+}
 
 const photos = {
-  Home: [
-    "photos/Home/01.jpg",
-    "photos/Home/02.jpg",
-    "photos/Home/03.jpg"
-  ],
-  Portraits: [
-    "photos/Portraits/05.jpg",
-    "photos/Portraits/06.jpg"
-  ],
-  Landscape: [
-    "photos/Landscape/03.jpg",
-    "photos/Landscape/04.jpg"
-  ],
-  Street: [
-    "photos/Street/09.jpg",
-    "photos/Street/10.jpg"
-  ],
-  Events: [
-    "photos/Events/07.jpg",
-    "photos/Events/08.jpg"
-  ]
+  Home: generatePhotos("Home", 5),
+  Portraits: generatePhotos("Portratis", 20),
+  Landscape: generatePhotos("Landscape", 15),
+  Street: generatePhotos("Street", 12),
+  Events: generatePhotos("Events", 18)
 };
 
 const menu = document.getElementById("menu");
