@@ -100,7 +100,7 @@
     /* Contact */
     #contact {
       max-width: 500px;
-      margin: 20px auto;
+      margin: -100px auto 40px auto;
       padding: 16px;
     }
 
@@ -112,7 +112,7 @@
 
     #contact button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       background: white;
       color: black;
       border: none;
@@ -131,7 +131,7 @@
   <img id="viewerImg" />
 </div>
 
-<div id="contact">
+<div id="contact" style="display:none">
   <h2>Contact</h2>
   <form action="mailto:your@email.com" method="post" enctype="text/plain">
     <input type="text" name="name" placeholder="Your name" required />
@@ -184,6 +184,44 @@ function loadPage(page) {
   document.querySelectorAll("nav button").forEach(b => {
     b.classList.toggle("active", b.textContent === page);
   });
+
+  home.style.display = "none";
+  gallery.style.display = "none";
+  contact.style.display = "none";
+
+  home.innerHTML = "";
+  gallery.innerHTML = "";
+
+  if (page === "Home") {
+    home.style.display = "block";
+    currentIndex = 0;
+    const img = document.createElement("img");
+    img.src = photos.Home[currentIndex];
+    img.onclick = () => openViewer(currentIndex);
+
+    const prev = document.createElement("button");
+    prev.textContent = "◀";
+    prev.className = "slider-btn prev";
+    prev.onclick = () => slide(-1, img, photos.Home);
+
+    const next = document.createElement("button");
+    next.textContent = "▶";
+    next.className = "slider-btn next";
+    next.onclick = () => slide(1, img, photos.Home);
+
+    home.append(img, prev, next);
+  } else if (page === "Contact") {
+    contact.style.display = "block";
+  } else {
+    gallery.style.display = "grid";
+    photos[page].forEach((src, i) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.onclick = () => openViewer(i);
+      gallery.appendChild(img);
+    });
+  }
+});
 
   home.innerHTML = "";
   gallery.innerHTML = "";
