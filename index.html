@@ -59,7 +59,7 @@
 
     /* Home - Masonry style */
     #home {
-      column-count: 3;
+      column-count: 4;
       column-gap: 0;
       padding: 0;
     }
@@ -81,42 +81,14 @@
       cursor: pointer;
     }
 
-    .slider-btn {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 28px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff;
-      cursor: pointer;
-      padding: 12px 16px;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-      transition: all 0.2s ease;
-      z-index: 50;
+    #home .slider-btn {
+      display: none;
     }
-
-    .slider-btn:hover {
-      background: rgba(255,255,255,0.25);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-      transform: translateY(-50%) scale(1.05);
-    }
-
-    .prev { left: 20px; }
-    .next { right: 20px; }
 
     @media (max-width: 768px) {
       #home {
         column-count: 2;
       }
-      .prev { left: 10px; }
-      .next { right: 10px; }
     }
 
     @media (max-width: 480px) {
@@ -127,7 +99,7 @@
 
     /* Gallery – Masonry Layout */
     .gallery {
-      column-count: 3;
+      column-count: 4;
       column-gap: 0;
       padding: 0;
       background: #000;
@@ -184,12 +156,12 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 80px 20px 20px 20px;
+      padding: 80px 60px 20px 60px;
     }
 
     #viewer img {
-      max-width: 95vw;
-      max-height: 90vh;
+      max-width: 90vw;
+      max-height: 85vh;
       object-fit: contain;
       box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     }
@@ -211,11 +183,48 @@
       justify-content: center;
       box-shadow: 0 2px 12px rgba(0,0,0,0.3);
       transition: all 0.2s ease;
+      z-index: 1001;
     }
 
     #viewer-close:hover {
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
+    }
+
+    .viewer-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 28px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+      z-index: 1001;
+    }
+
+    .viewer-nav:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .viewer-prev { left: 20px; }
+    .viewer-next { right: 20px; }
+
+    @media (max-width: 768px) {
+      #viewer {
+        padding: 80px 20px 20px 20px;
+      }
+      .viewer-prev { left: 10px; }
+      .viewer-next { right: 10px; }
     }
 
     /* Contact */
@@ -339,6 +348,8 @@
 
 <div id="viewer">
   <button id="viewer-close">×</button>
+  <button class="viewer-nav viewer-prev">◀</button>
+  <button class="viewer-nav viewer-next">▶</button>
   <img id="viewerImg" />
 </div>
 
@@ -376,7 +387,7 @@ function generatePhotos(folder, count) {
 const photos = {
   Home: generatePhotos("Home", 6),
   Portraits: generatePhotos("Portraits", 5),
-  Landscape: generatePhotos("Landscape", 26),
+  Landscape: generatePhotos("Landscape", 9),
   Street: generatePhotos("Street", 8),
   Events: generatePhotos("Events", 3)
 };
@@ -426,18 +437,6 @@ function loadPage(page) {
       container.appendChild(img);
       home.appendChild(container);
     });
-
-    const prev = document.createElement("button");
-    prev.textContent = "◀";
-    prev.className = "slider-btn prev";
-    prev.onclick = () => navigate(-1);
-
-    const next = document.createElement("button");
-    next.textContent = "▶";
-    next.className = "slider-btn next";
-    next.onclick = () => navigate(1);
-
-    home.append(prev, next);
   } else if (page === "Contact") {
     contact.style.display = "block";
   } else {
@@ -456,34 +455,35 @@ function loadPage(page) {
   }
 }
 
-function navigate(dir) {
-  const scrollAmount = window.innerHeight * 0.8;
-  window.scrollBy({
-    top: dir * scrollAmount,
-    behavior: 'smooth'
-  });
-}
-
 function openViewer(i) {
   currentIndex = i;
   viewer.style.display = "flex";
   viewerImg.src = photos[currentPage][currentIndex];
 }
 
+function navigateViewer(dir) {
+  const list = photos[currentPage];
+  currentIndex = (currentIndex + dir + list.length) % list.length;
+  viewerImg.src = list[currentIndex];
+}
+
 const closeBtn = document.getElementById("viewer-close");
+const prevBtn = document.querySelector(".viewer-prev");
+const nextBtn = document.querySelector(".viewer-next");
+
 closeBtn.onclick = () => viewer.style.display = "none";
+prevBtn.onclick = () => navigateViewer(-1);
+nextBtn.onclick = () => navigateViewer(1);
+
 viewer.onclick = (e) => {
   if (e.target === viewer) viewer.style.display = "none";
 };
 
 window.addEventListener("keydown", e => {
   if (viewer.style.display !== "flex") return;
-  if (e.key === "ArrowRight") currentIndex++;
-  if (e.key === "ArrowLeft") currentIndex--;
-
-  const list = photos[currentPage];
-  currentIndex = (currentIndex + list.length) % list.length;
-  viewerImg.src = list[currentIndex];
+  if (e.key === "Escape") viewer.style.display = "none";
+  if (e.key === "ArrowRight") navigateViewer(1);
+  if (e.key === "ArrowLeft") navigateViewer(-1);
 });
 
 document.getElementById("year").textContent = new Date().getFullYear();
