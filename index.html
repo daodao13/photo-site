@@ -109,24 +109,81 @@
 
     /* Contact */
     #contact {
-      max-width: 500px;
-      margin: 100px auto 40px auto;
-      padding: 16px;
+      max-width: 600px;
+      margin: 80px auto 60px auto;
+      padding: 40px;
+    }
+
+    #contact h2 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    #contact p {
+      color: #aaa;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
     }
 
     #contact input, #contact textarea {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      font-size: 16px;
+      font-family: Arial, Helvetica, sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s ease, background 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    #contact input:focus, #contact textarea:focus {
+      outline: none;
+      border-color: #666;
+      background: #181818;
+    }
+
+    #contact textarea {
+      resize: vertical;
+      min-height: 120px;
     }
 
     #contact button {
       width: 100%;
-      padding: 10px;
-      background: white;
-      color: black;
+      padding: 16px;
+      background: #fff;
+      color: #000;
       border: none;
       cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 4px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    #contact button:hover {
+      background: #e0e0e0;
+      transform: translateY(-2px);
+    }
+
+    #contact button:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      #contact {
+        margin: 40px auto;
+        padding: 24px 16px;
+      }
+
+      #contact h2 {
+        font-size: 2rem;
+      }
     }
   
     /* Footer */
@@ -142,8 +199,10 @@
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      gap: 12px;
     }
 
     .footer-content a {
@@ -168,12 +227,13 @@
 </div>
 
 <div id="contact" style="display:none">
-  <h2>Contact</h2>
+  <h2>Get in Touch</h2>
+  <p>Have a project in mind or want to book a session? Let's talk.</p>
   <form action="mailto:your@email.com" method="post" enctype="text/plain">
-    <input type="text" name="name" placeholder="Your name" required />
-    <input type="email" name="email" placeholder="Your email" required />
-    <textarea name="message" placeholder="Message" rows="4" required></textarea>
-    <button type="submit">Send</button>
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" placeholder="Tell me about your project..." rows="5" required></textarea>
+    <button type="submit">Send Message</button>
   </form>
 </div>
 
