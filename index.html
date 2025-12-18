@@ -15,8 +15,9 @@
     nav {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      padding: 20px;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px 10px;
     }
 
     nav button {
@@ -25,10 +26,24 @@
       color: white;
       font-size: 16px;
       cursor: pointer;
+      padding: 8px 4px;
+      white-space: nowrap;
     }
 
     nav button.active {
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        gap: 12px 16px;
+        padding: 16px 10px;
+      }
+
+      nav button {
+        font-size: 15px;
+        padding: 6px 2px;
+      }
     }
 
     /* Home slider */
